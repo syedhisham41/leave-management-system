@@ -18,6 +18,7 @@ import exceptions.mapper.JsonExceptionMapper;
 import exceptions.mapper.ParameterExceptionMapper;
 import exceptions.mapper.ServiceExceptionMapper;
 import handler.*;
+import handler.swagger_ui.ClassPathFileHandler;
 import service.*;
 
 public class Main {
@@ -61,17 +62,22 @@ public class Main {
 
 		Service_manager manager_service = new Service_manager(dao_manager, department_service, emp_get);
 
-//		server.createContext("/employee/get", new Handler_get_employee_by_id(emp_get, exceptionInstance));
-//		server.createContext("/employee/getall", new Handler_get_all_employees(emp_get));
+		// server.createContext("/employee/get", new Handler_get_employee_by_id(emp_get,
+		// exceptionInstance));
+		// server.createContext("/employee/getall", new
+		// Handler_get_all_employees(emp_get));
 		server.createContext("/employee/get", new Handler_get_employee(emp_get, manager_service, exceptionInstance));
 		server.createContext("/employee/add", new Handler_insert_employee(emp_add, exceptionInstance));
 		server.createContext("/employee/update", new Handler_update_employee(emp_update, exceptionInstance));
 		server.createContext("/employee/delete", new Handler_delete_employee(emp_delete, exceptionInstance));
-//		server.createContext("/departments", new Handler_get_all_departments_with_query(emp_get));
+		// server.createContext("/departments", new
+		// Handler_get_all_departments_with_query(emp_get));
 		server.createContext("/department", new Handler_get_department(department_service, exceptionInstance));
 		server.createContext("/manager", new Handler_get_manager(manager_service, exceptionInstance));
 		server.createContext("/manager/check", new Handler_get_manager_check(manager_service, exceptionInstance));
 		server.createContext("/debug/exceptions", new Handler_debug_exceptions(exceptionInstance));
+		server.createContext("/docs", new ClassPathFileHandler("/swagger-ui"));
+		server.createContext("/specs", new ClassPathFileHandler("/specs"));
 		server.setExecutor(null);
 		server.start();
 		System.out.println("Server started on port 8080");

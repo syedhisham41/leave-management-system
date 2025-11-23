@@ -1,0 +1,582 @@
+openapi: 3.1.0
+info:
+  title: Employee Service API
+  description: Employee Management APIs for Leave Management System
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Employee
+    description: Employee CRUD operations
+  - name: Department
+    description: Department retrieval APIs
+  - name: Manager
+    description: Manager and employee role checks
+  - name: Debug
+    description: Debug endpoints for exceptions
+
+paths:
+  /employee/add:
+    post:
+      tags:
+        - Employee
+      summary: Create a new employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeCreateRequest'
+            example:
+              emp_name: Ayisha Faheema
+              emp_department_id: ENG
+              emp_joining_date: "01-06-2025"
+              emp_email: ayisha.faheema@lms.dev
+      responses:
+        '201':
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_employee_add'
+              example:
+                message: Employee created successfully
+                code: EMPLOYEE_CREATED
+                http_code: 201
+                data:
+                  employee_id: 1
+                  emp_department_id: ENG
+                  eventFailed: false
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_generic'
+        '405':
+          description: Invalid HTTP method
+        '500':
+          description: Internal server error
+
+  /employee/update/{id}:
+    put:
+      tags:
+        - Employee
+      summary: Update an existing employee
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Employee ID to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateRequest'
+            example:
+              emp_name: Ayisha Faheema
+              emp_department_id: ENG
+              emp_joining_date: "01-06-2025"
+              emp_email: ayisha.faheema@lms.dev
+      responses:
+        '200':
+          description: Employee updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_integer'
+              example:
+                message: Employee updated successfully
+                code: EMPLOYEE_UPDATED
+                http_code: 200
+                data: 1
+        '400':
+          description: Invalid input
+        '404':
+          description: Employee not found
+        '405':
+          description: Invalid HTTP method
+        '500':
+          description: Internal server error
+
+  /employee/delete/{id}:
+    delete:
+      tags:
+        - Employee
+      summary: Delete an employee
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Employee ID to delete
+      responses:
+        '200':
+          description: Employee deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_employee_delete'
+              example:
+                message: Employee deleted successfully
+                code: EMPLOYEE_DELETED
+                http_code: 200
+                data:
+                  employee_id: 1
+                  eventFailed: false
+        '400':
+          description: Invalid input
+        '404':
+          description: Employee not found
+        '405':
+          description: Invalid HTTP method
+        '500':
+          description: Internal server error
+
+  /employee/get:
+    get:
+      tags:
+        - Employee
+      summary: Get employee(s)
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+        - in: query
+          name: email
+          schema:
+            type: string
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: department_id
+          schema:
+            type: string
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ASC, DESC]
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Employee(s) fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_employee_list'
+              example:
+                message: Employee fetched successfully
+                code: EMPLOYEE_FETCHED
+                http_code: 200
+                data:
+                  - emp_id: 1
+                    emp_name: Ayisha Faheema
+                    emp_department_id: ENG
+                    emp_email: ayisha.faheema@lms.dev
+
+  /department:
+    get:
+      tags:
+        - Department
+      summary: Get department(s)
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [ASC, DESC]
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Department(s) fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_department_list'
+              example:
+                message: Department fetched successfully
+                code: DEPARTMENT_FETCHED
+                http_code: 200
+                data:
+                  - department_id: ENG
+                    department_name: Engineering
+
+  /manager:
+    get:
+      tags:
+        - Manager
+      summary: Get manager for employee
+      parameters:
+        - in: query
+          name: employeeid
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Manager(s) fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_department_manager_list'
+              example:
+                message: Managers fetched successfully
+                code: MANAGER_FETCHED
+                http_code: 200
+                data:
+                  - department_id: ENG
+                    manager_id: 1
+                    role: MANAGER
+
+  /manager/check:
+    get:
+      tags:
+        - Manager
+      summary: Check if employee is a manager
+      parameters:
+        - in: query
+          name: employee_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Employee manager status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_manager_check'
+              example:
+                message: Employee is a manager
+                code: EMPLOYEE_IS_MANAGER
+                http_code: 200
+                data:
+                  isManager: true
+                  department_id: ENG
+                  employee_id: 1
+                  role: MANAGER
+
+  /debug/exceptions:
+    get:
+      tags:
+        - Debug
+      summary: Fetch last exceptions
+      responses:
+        '200':
+          description: Debug info fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DTO_api_response_debug'
+              example:
+                message: Debug Info fetched successfully
+                code: DEBUG_INFO
+                http_code: 200
+                data:
+                  exceptionCount: 15
+                  lastExceptions:
+                    - NullPointerException: x
+                    - SQLException: y
+
+components:
+  schemas:
+    EmployeeCreateRequest:
+      type: object
+      required:
+        - emp_name
+        - emp_department_id
+        - emp_joining_date
+        - emp_email
+      properties:
+        emp_name:
+          type: string
+        emp_department_id:
+          $ref: '#/components/schemas/Department'
+        emp_joining_date:
+          type: string
+          description: dd-MM-yyyy
+        emp_email:
+          type: string
+          format: email
+
+    EmployeeUpdateRequest:
+      type: object
+      required:
+        - emp_name
+        - emp_department_id
+        - emp_joining_date
+        - emp_email
+      properties:
+        emp_name:
+          type: string
+        emp_department_id:
+          $ref: '#/components/schemas/Department'
+        emp_joining_date:
+          type: string
+          description: dd-MM-yyyy
+        emp_email:
+          type: string
+          format: email
+
+    DTO_api_response_generic:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: object
+          nullable: true
+
+    DTO_api_response_integer:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: integer
+
+    DTO_api_response_employee_add:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          $ref: '#/components/schemas/DTO_employee_add_result'
+
+    DTO_api_response_employee_delete:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          $ref: '#/components/schemas/DTO_employee_delete_result'
+
+    DTO_api_response_employee_list:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DTO_employee'
+
+    DTO_api_response_department_list:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DTO_department'
+
+    DTO_api_response_department_manager_list:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DTO_department_manager'
+
+    DTO_api_response_manager_check:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          $ref: '#/components/schemas/DTO_manager_check'
+
+    DTO_api_response_debug:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+        data:
+          type: object
+          properties:
+            exceptionCount:
+              type: integer
+            lastExceptions:
+              type: array
+              items:
+                type: string
+
+    Employee:
+      type: object
+      properties:
+        emp_id:
+          type: integer
+        emp_name:
+          type: string
+        emp_department_id:
+          $ref: '#/components/schemas/Department'
+        emp_joining_date:
+          type: string
+          description: dd-MM-yyyy
+        emp_email:
+          type: string
+          format: email
+        updated_at:
+          type: string
+          format: date-time
+
+    DTO_employee:
+      type: object
+      properties:
+        emp_id:
+          type: integer
+        emp_name:
+          type: string
+        emp_department_id:
+          $ref: '#/components/schemas/Department'
+        emp_email:
+          type: string
+
+    DTO_department:
+      type: object
+      properties:
+        department_id:
+          type: string
+        department_name:
+          type: string
+
+    DTO_employee_add_result:
+      type: object
+      properties:
+        employee_id:
+          type: integer
+        emp_department_id:
+          $ref: '#/components/schemas/Department'
+        eventFailed:
+          type: boolean
+
+    DTO_employee_delete_result:
+      type: object
+      properties:
+        employee_id:
+          type: integer
+        eventFailed:
+          type: boolean
+
+    DTO_department_manager:
+      type: object
+      properties:
+        department_id:
+          $ref: '#/components/schemas/Department'
+        manager_id:
+          type: integer
+        role:
+          $ref: '#/components/schemas/Employee_role'
+
+    DTO_manager_check:
+      type: object
+      properties:
+        isManager:
+          type: boolean
+        department_id:
+          $ref: '#/components/schemas/Department'
+        employee_id:
+          type: integer
+        role:
+          $ref: '#/components/schemas/Employee_role'
+
+    Department:
+      type: string
+      enum:
+        - ENG
+        - QA
+        - HR
+        - FIN
+        - OPS
+        - MKT
+        - IT
+        - GEN
+
+    Employee_role:
+      type: string
+      enum:
+        - SUPERVISOR
+        - MANAGER
+
+    Auth_role:
+      type: string
+      enum:
+        - EMPLOYEE
+        - MANAGER
+        - ADMIN
