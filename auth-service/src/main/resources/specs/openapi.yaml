@@ -1,0 +1,251 @@
+openapi: 3.1.0
+info:
+  title: Auth Service API
+  version: 1.0.0
+  description: |
+    The **Auth Service** is a core component of the Leave Management System (LMS).
+    It provides secure user authentication and issues JSON Web Tokens (JWT)
+    that are validated by other microservices in the ecosystem.
+
+    #### Key Responsibilities
+    - User Signup (create login credentials for existing employees)
+    - User Login (generate signed JWT containing employee identity & role)
+    - Token issuing and claim management
+    - Centralized error handling using the standard LMS API response format
+    - Debug utilities for exception inspection (development mode only)
+
+    #### Signup Eligibility
+    Users **cannot** self-register.  
+    Signup is allowed **only** if the employee already exists in the Employee database.  
+    This ensures that login credentials are created only for legitimate employees.
+
+    #### System Purpose
+    This service is used internally within the organization to enable:
+    - Employees to apply for leave
+    - Managers to approve or reject leave requests
+    - A secure, role-aware workflow across microservices
+
+    #### Not in Scope
+    - Employee record management (handled by *employee-service*)
+    - Authorization or permission checks (performed by downstream services)
+
+    #### Authentication Model
+    The service issues JWT tokens containing:
+    - Employee ID (`emp_id`)
+    - Email
+    - Role
+    - Issued-at timestamp
+    - Expiry timestamp
+
+    #### API Overview
+    - `POST /auth/signup` – Register credentials for an existing employee
+    - `POST /auth/login` – Authenticate and obtain JWT token
+    - `GET /debug/exceptions` – View registered error mappers (dev only)
+
+    #### Response Envelope
+    All responses follow a standardized LMS format:
+    - `message` – User-friendly description
+    - `code` – Internal status code
+    - `http_code` – HTTP status
+    - `data` – The actual payload (DTOs, tokens)
+
+servers:
+  - url: http://localhost:8082
+    description: Local development server
+  - url: http://auth-service:8082
+    description: Docker internal service URL
+    
+tags:
+  - name: Auth
+  - name: Debug
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Create a new user login entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DTO_user_signup"
+      responses:
+        "201":
+          description: Signup successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DTO_api_response_string"
+        "400":
+          description: Invalid input or missing fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DTO_api_response_string"
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login and retrieve a JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DTO_user_login"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DTO_api_response_login"
+        "400":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DTO_api_response_string"
+
+  /debug/exceptions:
+    get:
+      tags:
+        - Debug
+      summary: Retrieve exception count and last 10 exceptions
+      responses:
+        "200":
+          description: Debug info fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DTO_api_response_debug"
+
+components:
+  schemas:
+
+    # -------------------------
+    # REQUEST DTOs
+    # -------------------------
+
+    DTO_user_signup:
+      type: object
+      required:
+        - emp_id
+        - email
+        - password
+      properties:
+        emp_id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: "said@lms.dev"
+        password:
+          type: string
+          format: password
+          example: "mypassword123"
+
+    DTO_user_login:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "said@lms.dev"
+        password:
+          type: string
+          format: password
+          example: "mypassword123"
+
+    # -------------------------
+    # RESPONSE WRAPPER
+    # -------------------------
+
+    DTO_api_response_base:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        http_code:
+          type: integer
+
+    DTO_api_response_string:
+      allOf:
+        - $ref: "#/components/schemas/DTO_api_response_base"
+        - type: object
+          properties:
+            data:
+              type: string
+              example: "Signup successful"
+
+    DTO_api_response_login:
+      allOf:
+        - $ref: "#/components/schemas/DTO_api_response_base"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/LoginResponseData"
+
+    DTO_api_response_debug:
+      allOf:
+        - $ref: "#/components/schemas/DTO_api_response_base"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/DebugResponseData"
+
+    # -------------------------
+    # LOGIN RESPONSE DATA
+    # -------------------------
+
+    LoginResponseData:
+      type: object
+      properties:
+        emp_id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: "said@lms.dev"
+        role:
+          type: string
+          example: "EMPLOYEE"
+        token:
+          type: string
+          description: JWT token
+        issued_at:
+          type: integer
+          description: Epoch millis token issuance
+          example: 1763874329165
+        expire_at:
+          type: integer
+          description: Epoch millis token expiry
+          example: 1763960729165
+
+    # -------------------------
+    # DEBUG RESPONSE DATA
+    # -------------------------
+
+    DebugResponseData:
+      type: object
+      properties:
+        exception_count:
+          type: integer
+          example: 12
+        last_exceptions:
+          type: array
+          items:
+            type: string
+          example:
+            - "JsonParseException: invalid json"
+            - "SQLException: DB locked"
+
