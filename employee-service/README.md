@@ -1,4 +1,12 @@
-# 🛡️ Employee Service
+# 👥 Employee Service
+### Leave Management System
+
+<img src="https://img.shields.io/badge/Java-21-ED8B00?style=flat-square">
+<img src="https://img.shields.io/badge/JDBC-Database-blue?style=flat-square">
+<img src="https://img.shields.io/badge/RabbitMQ-Event--Driven-orange?style=flat-square">
+<img src="https://img.shields.io/badge/SQLite-3-blue?style=flat-square">
+<img src="https://img.shields.io/badge/Flyway-Migrations-green?style=flat-square">
+<img src="https://img.shields.io/badge/Jackson-JSON-yellow?style=flat-square">
 
 Employee Service is a microservice of the **Leave Management System (LMS)**, built in **Java 21** using **JDBC** and **SQLite**, providing CRUD operations for employees, department fetching, and manager checks. The service also publishes employee creation and deletion events to **RabbitMQ** for asynchronous processing by other services like `leave-request-service` and `auth-service`.
 
@@ -110,7 +118,7 @@ Ensures loose coupling and microservice autonomy.
 
 ---
 
-## Debug Utilities
+### Debug Utilities
 
 Includes a development-friendly `/debug/exceptions` endpoint.
 
@@ -121,7 +129,7 @@ Helps developers view:
 
 Useful during API development, testing, and integration.
 
-
+---
 
 ## ⚡ Features — Employee Service
 ### 🧩 Complete Employee Lifecycle Management
@@ -197,44 +205,117 @@ Ensures predictable behavior across all microservices using Employee Service.
 
 ---
 
+### 🧩 Centralized Exception Handling
+
+The Auth Service uses a custom, extensible **exception mapping system** to ensure consistent error responses across all endpoints.
+
+#### ✔️ ExceptionMapperManager
+
+The `ExceptionMapperManager` is the core component responsible for:
+
+- Maintaining a list of registered exception mappers  
+- Routing exceptions to the correct mapper based on type  
+- Storing the **last 10 exceptions** for debugging  
+- Tracking the **total exception count**  
+- Supporting a `debug` mode for verbose logging  
+
+#### 🔌 Exception Mappers
+
+The service includes multiple specialized mappers, each responsible for handling specific categories of exceptions:
+
+- **ServiceExceptionMapper**
+- **DBExceptionMapper**
+- **JSONExceptionMapper**
+- **ParameterExceptionMapper**
+
+Each mapper implements the shared `ExceptionMapper` interface, ensuring:
+
+- Clear separation of concerns  
+- Predictable API error structure (`DTO_api_response`)  
+- Easy extension for new exception types  
+
+---
+
 ## 📂 Project Structure
 
 ```bash
 .
 ├── src/main/java/
-│ ├── config/
-│ ├── constants/enums/
-│ ├── dao/
-│ │ ├── interfaces/
-│ │ ├── impl/sqlite/
-│ │ └── factory/
-│ ├── db/
-│ │ └── migration/
-│ ├── dto/
-│ ├── employee_service_runner/
-│ ├── event/
-│ │ ├── base/
-│ │ ├── core/
-│ │ ├── publisher/
-│ │ ├── registry/
-│ │ └── types/
-│ ├── exceptions/
-│ │ ├── exception/
-│ │ └── mapper/
-│ ├── handler/
-│ ├── service/
-│ ├── utils/
-├── src/main/resources
-│ ├── db/
-│ │ └── migration/
-│ ├── specs/
-│ └── swagger-ui/
-├── README.md
+│   ├── config/                  # Application-wide configuration classes
+│   ├── constants/enums/         # Enum types and constant values
+│   ├── dao/                     # Data Access Objects for database interaction
+│   │   ├── interfaces/          # DAO interfaces
+│   │   ├── impl/sqlite/         # SQLite-specific DAO implementations
+│   │   └── factory/             # Factory classes to obtain DAO instances
+│   ├── db/                      # Database utilities
+│   │   └── migration/           # Java-based Flyway migration classes (optional)
+│   ├── dto/                     # Data Transfer Objects for API requests/responses
+│   ├── employee_service_runner/ # Main entry point / runner for Employee Service
+│   ├── event/                   # Event-driven architecture support
+│   │   ├── base/                # Base event classes/interfaces
+│   │   ├── core/                # Core event processing logic
+│   │   ├── publisher/           # Event publishing classes
+│   │   ├── registry/            # Event registry / subscriptions
+│   │   └── types/               # Event type definitions (EmployeeCreated, etc.)
+│   ├── exceptions/              # Exception handling
+│   │   ├── exception/           # Custom exception classes
+│   │   └── mapper/              # Exception-to-HTTP response mapping
+│   ├── handler/                 # HttpHandler implementations for each API endpoint
+│   ├── service/                 # Business logic / service layer
+│   ├── utils/                   # Helper utilities and common functions
+├── src/main/resources/
+│   ├── db/
+│   │   └── migration/           # SQL-based Flyway migration scripts
+│   ├── specs/                   # OpenAPI/Swagger YAML or JSON specs
+│   └── swagger-ui/              # Swagger UI static files
+├── README.md                    # Project README
 ├── data/
-│ └── Employee-management.db
-├── .env.example
-├── pom.xml
+│   └── Employee-management.db    # SQLite database file
+├── .env.example                  # Environment variable template
+├── pom.xml                       # Maven project descriptor
+
 ```
+---
+
+## ▶️ Running the Employee Service Locally
+
+Follow the steps below to run the Employee Service in a local development environment.
+
+### 1. Clone the Repository
+Make sure you have cloned the LMS monorepo or the standalone `employee-service` folder.
+```bash
+git clone <your-repo-url>
+```
+### 2. Navigate to the Employee Service
+```bash
+cd employee-service
+```
+### 3. Open the Project in VS Code (or your preferred IDE)
+
+### 4. Configure Environment Variables
+- Create a `.env` file in the project root by copying the provided template:
+```bash
+cp .env.example .env
+```
+- Update values if needed (database path, JWT secret, service URLs, etc.).
+
+### 5. Run the Service
+Run the main entry class:
+`src/main/java/employee_service_runner/Main.java`
+*(Or run directly from your IDE’s “Run” button.)*
+
+### 6. Service Startup
+Once started, the Employee Service will be available at:
+`http://localhost:8080/`
+
+### 7. Verify the Service
+
+You can confirm the service is running by accessing:
+- Swagger UI 
+    - `http://localhost:8080/docs/`
+
+Everything should now be up and running locally.
+
 ---
 
 ## 📄 OpenAPI Documentation (Swagger UI)
