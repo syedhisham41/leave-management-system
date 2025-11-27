@@ -35,6 +35,7 @@ import handler.Handler_get_leave_request;
 import handler.Handler_leave_request_approval_action;
 import handler.Handler_post_leave_balance;
 import handler.Handler_post_leave_request;
+import handler.swagger_ui.ClassPathFileHandler;
 import service.Service_leave_audit_log;
 import service.Service_leave_balance;
 import service.Service_leave_request_approval;
@@ -94,6 +95,8 @@ public class Runner {
 				new Handler_leave_request_approval_action(leaveRequestApprovalService, exceptionInstance));
 
 		server.createContext("/debug/exceptions", new Handler_debug_exceptions(exceptionInstance));
+		server.createContext("/docs", new ClassPathFileHandler("/swagger-ui"));
+		server.createContext("/specs", new ClassPathFileHandler("/specs"));
 
 		server.setExecutor(null);
 		server.start();
