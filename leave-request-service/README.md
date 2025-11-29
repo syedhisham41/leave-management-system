@@ -1,4 +1,4 @@
-# 🚀 Leave Request Service
+# 🗓 Leave Request Service
 ### Leave Management System
 
 ![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
@@ -325,5 +325,6 @@ Access the UI at:
 ### 📘 OpenAPI Specification
 Raw YAML specification is available at:
 **`http://localhost:8081/specs/openapi.yaml`**
+
 
 ---
