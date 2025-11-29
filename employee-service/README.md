@@ -1,12 +1,17 @@
 # 👥 Employee Service
 ### Leave Management System
 
-<img src="https://img.shields.io/badge/Java-21-ED8B00?style=flat-square">
-<img src="https://img.shields.io/badge/JDBC-Database-blue?style=flat-square">
-<img src="https://img.shields.io/badge/RabbitMQ-Event--Driven-orange?style=flat-square">
-<img src="https://img.shields.io/badge/SQLite-3-blue?style=flat-square">
-<img src="https://img.shields.io/badge/Flyway-Migrations-green?style=flat-square">
-<img src="https://img.shields.io/badge/Jackson-JSON-yellow?style=flat-square">
+![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
+![Build](https://img.shields.io/badge/Build-Maven-C71A36?logo=apachemaven&logoColor=white)
+![Server](https://img.shields.io/badge/Server-Core%20Java%20HttpServer-1f425f)
+![Database](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
+![JDBC](https://img.shields.io/badge/Persistence-JDBC-4c1?logo=databricks&logoColor=white)
+![Flyway](https://img.shields.io/badge/Migrations-Flyway-CC0200?logo=flyway&logoColor=white)
+![Queue](https://img.shields.io/badge/Event%20Stream-RabbitMQ-FF6600?logo=rabbitmq&logoColor=white)
+![JSON](https://img.shields.io/badge/JSON-Jackson-000000?logo=json&logoColor=white)
+![Auth](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
+![Config](https://img.shields.io/badge/Config-Dotenv-8A2BE2)
+![Architecture](https://img.shields.io/badge/Architecture-Microservice-3A6EA5)
 
 Employee Service is a microservice of the **Leave Management System (LMS)**, built in **Java 21** using **JDBC** and **SQLite**, providing CRUD operations for employees, department fetching, and manager checks. The service also publishes employee creation and deletion events to **RabbitMQ** for asynchronous processing by other services like `leave-request-service` and `auth-service`.
 
@@ -284,7 +289,7 @@ Follow the steps below to run the Employee Service in a local development enviro
 ### 1. Clone the Repository
 Make sure you have cloned the LMS monorepo or the standalone `employee-service` folder.
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/syedhisham41/leave-management-system.git
 ```
 ### 2. Navigate to the Employee Service
 ```bash

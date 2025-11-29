@@ -1,10 +1,16 @@
 # 🛡️ Authentication Service 
 ### Leave Management System
 
-<img src="https://img.shields.io/badge/Java-21-ED8B00?style=flat-square">
-<img src="https://img.shields.io/badge/JDBC-Database-blue?style=flat-square">
-<img src="https://img.shields.io/badge/RabbitMQ-Event--Driven-orange?style=flat-square">
-<img src="https://img.shields.io/badge/SQLite-3-blue?style=flat-square">
+![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
+![Build](https://img.shields.io/badge/Build-Maven-C71A36?logo=apachemaven&logoColor=white)
+![Server](https://img.shields.io/badge/Server-Core%20Java%20HttpServer-1f425f)
+![Database](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
+![JDBC](https://img.shields.io/badge/Persistence-JDBC-4c1?logo=databricks&logoColor=white)
+![Flyway](https://img.shields.io/badge/Migrations-Flyway-CC0200?logo=flyway&logoColor=white)
+![Queue](https://img.shields.io/badge/Event%20Stream-RabbitMQ-FF6600?logo=rabbitmq&logoColor=white)
+![Auth](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
+![Config](https://img.shields.io/badge/Config-Dotenv-8A2BE2)
+![Architecture](https://img.shields.io/badge/Architecture-Microservice-3A6EA5)
 
 
 The **Auth Service** is a core microservice in the **Leave Management System (LMS)**.  
@@ -202,7 +208,7 @@ Follow the steps below to run the Auth Service in a local development environmen
 ### 1. Clone the Repository
 Make sure you have cloned the LMS monorepo or the standalone `auth-service` folder.
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/syedhisham41/leave-management-system.git
 ```
 ### 2. Navigate to the Auth Service
 ```bash

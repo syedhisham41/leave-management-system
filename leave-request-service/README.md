@@ -2,15 +2,16 @@
 ### Leave Management System
 
 ![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk&logoColor=white)
-![Build](https://img.shields.io/badge/Build-Maven-C71A36?logo=apachemaven)
+![Build](https://img.shields.io/badge/Build-Maven-C71A36?logo=apachemaven&logoColor=white)
+![Server](https://img.shields.io/badge/Server-Core%20Java%20HttpServer-1f425f)
+![Database](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
 ![JDBC](https://img.shields.io/badge/Persistence-JDBC-4c1?logo=databricks&logoColor=white)
-![Database](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite)
-![Flyway](https://img.shields.io/badge/Flyway-Migrations-CC0200?logo=flyway)
-![Queue](https://img.shields.io/badge/Event_Stream-RabbitMQ-FF6600?logo=rabbitmq)
-![HTTP Server](https://img.shields.io/badge/Server-Core%20Java%20HttpServer-1f425f??logo=http)
+![Flyway](https://img.shields.io/badge/Migrations-Flyway-CC0200?logo=flyway&logoColor=white)
+![Queue](https://img.shields.io/badge/Event%20Stream-RabbitMQ-FF6600?logo=rabbitmq&logoColor=white)
+![JSON](https://img.shields.io/badge/JSON-Jackson-000000?logo=json&logoColor=white)
+![Auth](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
+![Config](https://img.shields.io/badge/Config-Dotenv-8A2BE2)
 ![Architecture](https://img.shields.io/badge/Architecture-Microservice-3A6EA5)
-![Auth](https://img.shields.io/badge/Auth-JWT-4c1?logo=lock)
-![Config](https://img.shields.io/badge/Config-Dotenv-8A2BE2?logo=envoyproxy&logoColor=white)
 
 A standalone microservice responsible for **managing employee leave applications**, **leave balances**, **approvals**, **audit logs**, and consuming employee events for automatic **leave balance lifecycle management**.
 
@@ -276,7 +277,7 @@ Follow the steps below to run the leave-request Service in a local development e
 ### 1. Clone the Repository
 Make sure you have cloned the LMS monorepo or the standalone `leave-request-service` folder.
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/syedhisham41/leave-management-system.git
 ```
 ### 2. Navigate to the Leave-request Service
 ```bash
